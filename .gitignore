@@ -2,5 +2,7 @@
 *.npy
 *.pth
 *.pyc
+*.csv
+*.bak
 .ipynb_checkpoints
 __pycache__
