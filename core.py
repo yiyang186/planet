@@ -30,7 +30,8 @@ class BestModel(object):
 class F2Meter(object):
     def __init__(self):
         self.reset()
-        
+        self.best_th = None
+
     def reset(self):
         self.labels = np.array([]).reshape(0, 17)
         self.preds = np.array([]).reshape(0, 17)
@@ -46,7 +47,8 @@ class F2Meter(object):
         else:
             th1 = utils.f2_opti_score(labels, preds, thresholds = np.arange(0, 1, 0.01), num_classes=17)
             th2 = utils.f2_opti_score(labels, preds, thresholds = np.arange(1, 0, -0.01), num_classes=17)
-            return utils.f2_score(labels, preds, (th1+th2)/2)
+            self.best_th = (th1+th2)/2
+            return utils.f2_score(labels, preds, self.best_th)
     
     
 class AverageMeter(object):

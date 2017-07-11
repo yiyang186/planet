@@ -27,6 +27,7 @@ class PlanetDataset(data.Dataset):
             return img, target
         else:
             img = Image.open('E:/new_data/kaggle/planet/test-jpg/{}.jpg'.format(self.test_files[index])).convert('RGB')
+            # img = Image.open('E:/new_data/kaggle/planet/train-jpg/{}.jpg'.format(self.test_files[index])).convert('RGB')
             img = self.transform(img, self.pic_size)
             return img
 

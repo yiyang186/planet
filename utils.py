@@ -28,12 +28,12 @@ def weighted_train_loader(x, y, probs, transf, batch=256, pic_size=(128, 128)):
 
 def valid_loader(x, y, transf, batch=256, pic_size=(128, 128)):
     valie_dataset = PlanetDataset(files=x, labels=y, transform=transf, pic_size=pic_size)
-    valieloader = DataLoader(valie_dataset, batch_size=batch, shuffle=True, sampler=None)
+    valieloader = DataLoader(valie_dataset, batch_size=batch, shuffle=False, sampler=None)
     return valieloader
 
 def test_loader(x, transf, batch=256, pic_size=(128, 128)):
     test_dataset = PlanetDataset(files=x, test=True, transform=transf, pic_size=pic_size)
-    testloader = DataLoader(test_dataset, batch_size=batch, shuffle=True, sampler=None)
+    testloader = DataLoader(test_dataset, batch_size=batch, shuffle=False, sampler=None)
     return testloader
 
 def generate_train_set(x, y, transf, batch=256, pic_size=(128, 128)):
@@ -109,7 +109,7 @@ def to_submit_new(y_prob, th, test_df):
         test_df.iloc[i, 1] = ' '.join([inv_label_map[f4[i]]] + [inv_label_map[x] for x in np.where(y_pred[i] == 1)[0]])
     return test_df
 
-def to_submit(y_prob, th, test_df):
+def to_submit(y_prob, th, test_df, inv_label_map):
     y_pred = np.zeros_like(y_prob, dtype=np.int8)
     for i in range(17):
         y_pred[:, i] = y_prob[:, i] > th[i]
