@@ -19,9 +19,12 @@ def weighted_from_probs(probs, y_all):
         weights[y_all[:, i] > 0] = w
     return weights
 
-def weighted_train_loader(x, y, probs, transf, batch=256, pic_size=(128, 128)):
+def weighted_train_loader(x, y, probs, transf, batch=256, pic_size=(128, 128), factor=None):
     weights = weighted_from_probs(probs, y)
+    if not factor is None:
+        weights = weights * factor
     sampler = WeightedRandomSampler(weights, y.shape[0])
+
     train_dataset = PlanetDataset(files=x, labels=y, transform=transf, pic_size=pic_size)
     trainloader = DataLoader(train_dataset, batch_size=batch, shuffle=True, sampler=sampler)
     return trainloader
@@ -74,5 +77,10 @@ def to_submit(y_prob, th, test_df, inv_label_map):
         test_df.iloc[i, 1] = ' '.join([inv_label_map[x] for x in np.where(y_pred[i] == 1)[0]])
     return test_df
 
+def to_01(y_prob, th):
+    y_pred = np.zeros_like(y_prob, dtype=np.int8)
+    for i in range(17):
+        y_pred[:, i] = y_prob[:, i] > th[i]
+    return y_pred
 
 
